@@ -68,11 +68,13 @@ $games_query = <<<EOT
     g.draw,
     date_format(g.timestamp,'%b %d %r') as date,
     g.timestamp,
+    r.score as opp_score,
     'Win' as outcome
     from
     games g
     inner join submissions s on s.submission_id = g.loser
     inner join users u on u.user_id = s.user_id
+    left outer join rankings r on r.submission_id = g.loser
     where g.winner= $submission)
 union
 (select
@@ -83,11 +85,13 @@ union
     g.draw,
     date_format(g.timestamp,'%b %d %r') as date,
     g.timestamp,
+    r.score as opp_score,
     'Loss' as outcome
    from
     games g
     inner join submissions s on s.submission_id = g.winner
     inner join users u on u.user_id = s.user_id
+    left outer join rankings r on r.submission_id = g.winner
     where g.loser = $submission)
 union
 (select
@@ -98,11 +102,13 @@ union
     g.draw,
     date_format(g.timestamp,'%b %d %r') as date,
     g.timestamp,
+    r.score as opp_score,
     'Draw' as outcome
     from
     games g
     inner join submissions s on s.submission_id = g.player_one
     inner join users u on u.user_id = s.user_id
+    left outer join rankings r on r.submission_id = g.player_one
     where g.player_two = $submission
     and g.draw = 1)
 union
@@ -114,11 +120,13 @@ union
     g.draw,
     date_format(g.timestamp,'%b %d %r') as date,
     g.timestamp,
+    r.score as opp_score,
     'Draw' as outcome
     from
     games g
     inner join submissions s on s.submission_id = g.player_two
     inner join users u on u.user_id = s.user_id
+    left outer join rankings r on r.submission_id = g.player_two
     where g.player_one = $submission
     and g.draw = 1)
 order by
@@ -148,6 +156,7 @@ EOT;
     for ($i = 1; $row = mysql_fetch_assoc($games_results); $i += 1) {
         $opp_name = $row["opp_name"];
         $opp_id = $row["opp_id"];
+        $opp_score = $row["opp_score"] ?: "<i>no score yet</i>";
 	$game_id = $row["game_id"];
         $outcome = $row["outcome"];
         $datetime = $row["date"];
@@ -167,7 +176,7 @@ EOT;
         $row_class = $i % 2 == 0 ? "even" : "odd";
         $table .= "  <tr class=\"$row_class\">";
         $table .= "    <td>$datetime</td>";
-        $table .= "    <td><a href=\"profile.php?user_id=$opp_id\">$opp_name</a></td>";
+        $table .= "    <td><a href=\"profile.php?user_id=$opp_id\">$opp_name</a> ($opp_score)</td>";
         $table .= "    <td class=\"$outcome_class\">$outcome</td>";
 	$table .= "    <td><a href=\"visualizer.php?game_id=$game_id\">View Game &gt;&gt;</a></td>";
         $table .= "  </tr>";
