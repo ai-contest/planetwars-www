@@ -75,7 +75,8 @@ $games_query = <<<EOT
     inner join submissions s on s.submission_id = g.loser
     inner join users u on u.user_id = s.user_id
     left outer join rankings r on r.submission_id = g.loser
-    where g.winner= $submission)
+    where g.winner= $submission
+    and r.leaderboard_id = (select max(leaderboard_id) from leaderboards))
 union
 (select
     u.username as opp_name,
@@ -92,7 +93,8 @@ union
     inner join submissions s on s.submission_id = g.winner
     inner join users u on u.user_id = s.user_id
     left outer join rankings r on r.submission_id = g.winner
-    where g.loser = $submission)
+    where g.loser = $submission
+    and r.leaderboard_id = (select max(leaderboard_id) from leaderboards))
 union
 (select
     u.username as opp_name,
@@ -110,6 +112,7 @@ union
     inner join users u on u.user_id = s.user_id
     left outer join rankings r on r.submission_id = g.player_one
     where g.player_two = $submission
+    and r.leaderboard_id = (select max(leaderboard_id) from leaderboards)
     and g.draw = 1)
 union
 (select
@@ -128,6 +131,7 @@ union
     inner join users u on u.user_id = s.user_id
     left outer join rankings r on r.submission_id = g.player_two
     where g.player_one = $submission
+    and r.leaderboard_id = (select max(leaderboard_id) from leaderboards)
     and g.draw = 1)
 order by
     timestamp desc
@@ -156,7 +160,7 @@ EOT;
     for ($i = 1; $row = mysql_fetch_assoc($games_results); $i += 1) {
         $opp_name = $row["opp_name"];
         $opp_id = $row["opp_id"];
-        $opp_score = $row["opp_score"] ?: "<i>no score yet</i>";
+        $opp_score = $row["opp_score"];
 	$game_id = $row["game_id"];
         $outcome = $row["outcome"];
         $datetime = $row["date"];
