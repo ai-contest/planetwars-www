@@ -32,6 +32,16 @@
   <script>!window.jQuery && document.write('<script src="visualizer/js/jquery-1.4.2.min.js"><\/script>')</script>
   
   <script>
+  $(function(){
+    if(document.getElementById('display').getContext==undefined){
+      $('#visualizer').html('<APPLET code="Viewer.class" width="500" height="500" archive="Visualizer.jar"> <param name="game_id" value="<?= htmlspecialchars($_GET["game_id"]); ?>"/> Java applet support required.</APPLET>')
+    }
+  })
+  
+  </script>
+  
+  
+  <script>
   <?php
   ob_start();
   include('game_info.php');
