@@ -121,7 +121,7 @@ $table .= <<<EOT
   <th>Country</th>
   <th>Organization</th>
   <th>Language</th>
-  <th>Elo Score</th>
+  <th>Score</th>
   <!--<th>Wins</th>-->
   <!--<th>Losses</th>-->
   <!--<th>Draws</th>-->
