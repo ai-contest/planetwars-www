@@ -18,6 +18,11 @@
             <a href="#" id="next-frame-button">&raquo;</a> | 
             <a href="#" id="end-button">&raquo;<span class="small">|</span></a>
         </p>
+        <p>
+          <br>
+          <br>
+          <canvas id="chart" width="640" height="100" ></canvas>
+        </p>
     </div>
     
 <?php include "footer.php"; ?>
@@ -31,7 +36,7 @@
   ob_start();
   include('game_info.php');
   $data = ob_get_clean();
-  echo 'var data = "' . addslashes(str_replace("\n", "\\n", $data)) . '"';
+  echo 'var data = "' . htmlspecialchars(str_replace("\n", "\\n", $data)) . '"';
   ?>
   </script>
   <script src="visualizer/js/visualizer.js?v=1"></script>
