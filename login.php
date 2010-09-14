@@ -23,6 +23,11 @@
     <td>&nbsp;</td>
     <td><a href="register.php">Create an account</a></td>
   </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><a href="forgot_password.php">Forgot my password</a></td>
+  </tr>
   </table>
 </form>
 
